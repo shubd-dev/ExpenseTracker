@@ -154,6 +154,10 @@ public class Main {
         double amount = scanner.nextDouble();
 
         expenses.add(new expense(id, date, description, amount));
+
+        expenseUtils.saveExpenses(expenses);
+
+
         System.out.println("Expense added successfully!");
 
 

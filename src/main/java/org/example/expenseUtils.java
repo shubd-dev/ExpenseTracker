@@ -12,6 +12,7 @@ public class expenseUtils {
     private static final String FILE_PATH = "expense.json";
 
     public static void saveExpenses(List<expense> expenses){
+
         JSONArray jsonArray = new JSONArray();
 
         for(expense ex : expenses){
