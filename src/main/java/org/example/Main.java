@@ -57,7 +57,7 @@ public class Main {
         }
     }
 
-    private static void viewSummaryByMonth(List<expense> expenses, Scanner scanner) {
+    static void viewSummaryByMonth(List<expense> expenses, Scanner scanner) {
         System.out.print("Enter year (YYYY): ");
         int year = scanner.nextInt();
         System.out.print("Enter month (1-12): ");
@@ -98,12 +98,12 @@ public class Main {
     }
 
 
-    private static void viewSummary(List<expense> expenses) {
+    static void viewSummary(List<expense> expenses) {
         double total = expenses.stream().mapToDouble(expense::getAmount).sum();
         System.out.println("Total Expenses: " + total);
     }
 
-    private static void viewExpenses(List<expense> expenses) {
+    static void viewExpenses(List<expense> expenses) {
         if (expenses.isEmpty()) {
             System.out.println("No expenses to show.");
             return;
@@ -113,15 +113,16 @@ public class Main {
         }
     }
 
-    private static void deleteExpense(List<expense> expenses, Scanner s) {
+    static void deleteExpense(List<expense> expenses, Scanner s) {
         System.out.print("Enter Expense ID to Delete: ");
         int id = s.nextInt();
 
         expenses.removeIf(expense -> expense.getId() == id);
+        expenseUtils.saveExpenses(expenses);
         System.out.println("Expense deleted successfully!");
     }
 
-    private static void updateExpense(List<expense> expenses, Scanner scanner) {
+    static void updateExpense(List<expense> expenses, Scanner scanner) {
         System.out.print("Enter Expense ID to Update: ");
         int id = scanner.nextInt();
         scanner.nextLine(); // Consume newline
@@ -134,6 +135,7 @@ public class Main {
                 expense.setDescription(scanner.nextLine());
                 System.out.print("Enter New Amount: ");
                 expense.setAmount(scanner.nextDouble());
+                expenseUtils.saveExpenses(expenses);
                 System.out.println("Expense updated successfully!");
                 return;
             }
@@ -141,7 +143,7 @@ public class Main {
         System.out.println("Expense ID not found.");
     }
 
-    private static void addExpense(List<expense> expenses, Scanner scanner) {
+    static void addExpense(List<expense> expenses, Scanner scanner) {
 
         System.out.print("Enter ID: ");
         int id = scanner.nextInt();
@@ -152,17 +154,9 @@ public class Main {
         String description = scanner.nextLine();
         System.out.print("Enter Amount: ");
         double amount = scanner.nextDouble();
-
         expenses.add(new expense(id, date, description, amount));
-
         expenseUtils.saveExpenses(expenses);
-
-
         System.out.println("Expense added successfully!");
-
-
     }
-
-
 }
 

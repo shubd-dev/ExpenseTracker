@@ -24,8 +24,7 @@ public class expenseUtils {
             jsonArray.put(jsonObject);
         }
 
-        try {
-            FileWriter file = new FileWriter(FILE_PATH);
+        try(FileWriter file = new FileWriter(FILE_PATH)) {
             file.write(jsonArray.toString(4));
         } catch (IOException e) {
             throw new RuntimeException(e);
