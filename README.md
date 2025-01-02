@@ -112,4 +112,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact ✉️
 
-For any inquiries or issues, please feel free to open an issue or contact me via [shubhamdhumale@gmail.com].
+For any inquiries or issues,  please feel free to open an issue or contact me via [shubhamdhumale@gmail.com].
