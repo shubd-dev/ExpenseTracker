@@ -20,7 +20,22 @@ public class Main {
 
 
             Scanner s = new Scanner(System.in);
-            Integer choice = s.nextInt();
+
+
+            boolean validInput = false;
+            Integer choice = 0 ;
+            while(!validInput) {
+                String input = s.nextLine();
+
+                try {
+                    //this is used to trim any whitespaces and parse it to integer
+                    choice = Integer.parseInt(input.trim());
+                    validInput = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                }
+            }
+
             List<Expense> expenses = ExpenseUtils.loadExpenses();
 
             switch (choice) {
