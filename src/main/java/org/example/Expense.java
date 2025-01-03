@@ -1,9 +1,10 @@
 package org.example;
+import java.time.LocalDate;
+
 
 public record Expense(
         int id,
-        String date,
+        LocalDate date,
         String description,
         double amount
-) {
-}
+)
