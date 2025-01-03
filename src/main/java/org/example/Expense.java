@@ -7,4 +7,4 @@ public record Expense(
         LocalDate date,
         String description,
         double amount
-)
+){}

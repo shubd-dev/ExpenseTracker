@@ -87,18 +87,13 @@ public final class Main {
         boolean foundExpenses = false;
 
         for (Expense expense : expenses) {
-            try {
-                LocalDate expenseDate = LocalDate.parse(expense.date(), formatter);
-                if (expenseDate.getYear() == year && expenseDate.getMonthValue() == month) {
-                    // Print details of the expense
-                    System.out.println("ID: " + expense.id() +
-                            ", Description: " + expense.description() +
-                            ", Amount: " + expense.amount());
-                    total += expense.amount();
-                    foundExpenses = true;
-                }
-            } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format in expense data: " + expense.date());
+            // Validate the date format using the provided formatter
+            if (expense.date().getYear() == year && expense.date().getMonthValue() == month) {
+                // Print expense details and update the total
+                System.out.printf("ID: %d, Description: %s, Amount: %.2f%n",
+                        expense.id(), expense.description(), expense.amount());
+                total += expense.amount();
+                foundExpenses = true;
             }
         }
 
@@ -142,7 +137,9 @@ public final class Main {
             Expense expense = expenses.get(i);
             if (expense.id() == id) {
                 System.out.print("Enter New Date (YYYY-MM-DD): ");
-                var date = scanner.nextLine();
+                var dateInput = scanner.nextLine();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate date = LocalDate.parse(dateInput, formatter);
                 System.out.print("Enter New Description: ");
                 var description = scanner.nextLine();
                 System.out.print("Enter New Amount: ");
@@ -167,11 +164,13 @@ public final class Main {
         int id = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter Date (YYYY-MM-DD): ");
         String date = scanner.nextLine();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
         System.out.print("Enter Description: ");
         String description = scanner.nextLine();
         System.out.print("Enter Amount: ");
         double amount = Double.parseDouble(scanner.nextLine());
-        expenses.add(new Expense(id, date, description, amount));
+        expenses.add(new Expense(id, localDate, description, amount));
         ExpenseUtils.saveExpenses(expenses);
         System.out.println("Expense added successfully!");
     }

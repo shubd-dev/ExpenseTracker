@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,32 +22,36 @@ class MainTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        MockitoAnnotations.openMocks(this); // Initialize mocks if required
         testExpenses = new ArrayList<>();
-        testExpenses.add(new Expense(1, "2025-01-01", "Groceries", 100.0));
-        testExpenses.add(new Expense(2, "2025-02-01", "Utilities", 200.0));
+        testExpenses.add(new Expense(1, LocalDate.of(2025, 1, 1), "Groceries", 100.0));
+        testExpenses.add(new Expense(2, LocalDate.of(2025, 2, 1), "Utilities", 200.0));
     }
+
 
     @Test
     void testAddExpense() {
-        // Mock user input
+        // Arrange
         String input = "3\n2025-03-01\nRent\n300.0\n";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-        System.setIn(in);
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
         Scanner scanner = new Scanner(System.in);
 
         // Act
         Main.addExpense(testExpenses, scanner);
 
         // Assert
+        Expense addedExpense = testExpenses.get(2);
         assertEquals(3, testExpenses.size());
-        assertEquals("Rent", testExpenses.get(2).getDescription());
-        assertEquals(300.0, testExpenses.get(2).getAmount());
+        assertEquals("Rent", addedExpense.description());
+        assertEquals(300.0, addedExpense.amount());
+        assertEquals(LocalDate.of(2025, 3, 1), addedExpense.date());
     }
+
+
 
     @Test
     void testUpdateExpense() {
-        // Mock user input
+        // Arrange
         String input = "1\n2025-01-02\nGroceries Updated\n150.0\n";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
@@ -56,14 +61,18 @@ class MainTest {
         Main.updateExpense(testExpenses, scanner);
 
         // Assert
-        assertEquals("Groceries Updated", testExpenses.get(0).getDescription());
-        assertEquals(150.0, testExpenses.get(0).getAmount());
+        Expense updatedExpense = testExpenses.get(0); // Get the updated expense
+        assertAll("Expense Update Assertions",
+                () -> assertEquals("Groceries Updated", updatedExpense.description(), "Description should be updated."),
+                () -> assertEquals(150.0, updatedExpense.amount(), "Amount should be updated."),
+                () -> assertEquals(LocalDate.of(2025, 1, 2), updatedExpense.date(), "Date should be updated.")
+        );
     }
 
     @Test
     void testDeleteExpense() {
-        // Mock user input
-        String input = "1\n";
+        // Arrange
+        String input = "1\n";  // Assume user wants to delete expense with id 1
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);
         Scanner scanner = new Scanner(System.in);
@@ -72,8 +81,8 @@ class MainTest {
         Main.deleteExpense(testExpenses, scanner);
 
         // Assert
-        assertEquals(1, testExpenses.size());
-        assertEquals(2, testExpenses.get(0).getId());
+        assertEquals(1, testExpenses.size(), "There should be one expense left after deletion.");
+        assertEquals(2, testExpenses.get(0).id(), "The remaining expense should have id 2.");
     }
 
     @Test

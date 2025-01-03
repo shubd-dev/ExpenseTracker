@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,9 +51,10 @@ public final class ExpenseUtils {
             JSONArray jsonArray = new JSONArray(jsonText);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
+                System.out.println(jsonObject.getString("key"));
                 Expense expense = new Expense(
                         jsonObject.getInt("id"),
-                        jsonObject.getString("date"),
+                        LocalDate.parse(jsonObject.getString("date"), DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         jsonObject.getString("description"),
                         jsonObject.getDouble("amount")
                 );
