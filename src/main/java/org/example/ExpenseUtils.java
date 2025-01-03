@@ -4,51 +4,49 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class ExpenseUtils {
+public final class ExpenseUtils {
     private static final String FILE_PATH = "expense.json";
 
-    public static void saveExpenses(List<Expense> expenses){
+    private ExpenseUtils() {}
 
+    public static void saveExpenses(List<Expense> expenses){
         JSONArray jsonArray = new JSONArray();
 
         for(Expense ex : expenses){
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", ex.getId());
-            jsonObject.put("date",ex.getDate());
-            jsonObject.put("description",ex.getDescription());
-            jsonObject.put("amount",ex.getAmount());
+            jsonObject.put("id", ex.id());
+            jsonObject.put("date",ex.date());
+            jsonObject.put("description",ex.description());
+            jsonObject.put("amount",ex.amount());
             jsonArray.put(jsonObject);
         }
 
         try(FileWriter file = new FileWriter(FILE_PATH)) {
             file.write(jsonArray.toString(4));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
 
     }
 
     public static List<Expense> loadExpenses(){
         List<Expense> expenses = new ArrayList<>();
-        File file = new File(FILE_PATH);
+        Path path = Path.of(FILE_PATH);
 
-        if(file.exists() == false){
+        if(!Files.exists(path)){
             System.out.println("File does not exists");
             return expenses;
         }
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            StringBuilder jsonText = new StringBuilder();
-            String line;
 
-            while ((line = reader.readLine()) != null) {
-                jsonText.append(line);
-            }
-
-            JSONArray jsonArray = new JSONArray(jsonText.toString());
+        try {
+            String jsonText = Files.readString(path);
+            JSONArray jsonArray = new JSONArray(jsonText);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Expense expense = new Expense(
