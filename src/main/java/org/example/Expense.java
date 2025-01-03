@@ -1,14 +1,16 @@
 package org.example;
 
+import java.time.LocalDate;
+
 public class Expense {
     private int id;
-    private String date;
+    private LocalDate date;
     private String description;
     private double amount;
 
     public Expense(int id, String date, String description, double amount){
         this.id = id;
-        this.date = date;
+        this.date = LocalDate.parse(date);
         this.description = description;
         this.amount = amount;
     }
@@ -17,8 +19,8 @@ public class Expense {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
+    public String getDate() { return date.toString(); }
+    public void setDate(String date) { this.date = LocalDate.parse(date); }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
