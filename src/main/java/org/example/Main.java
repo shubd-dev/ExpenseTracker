@@ -6,7 +6,9 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
-public class Main {
+public final class Main {
+    private Main() {}
+
     public static void main(String[] args) {
         while (true) {
             System.out.println("Welcome to the Expense Tracker");
@@ -23,7 +25,7 @@ public class Main {
 
 
             boolean validInput = false;
-            Integer choice = 0 ;
+            int choice = 0;
             while(!validInput) {
                 String input = s.nextLine();
 
@@ -39,34 +41,29 @@ public class Main {
             List<Expense> expenses = ExpenseUtils.loadExpenses();
 
             switch (choice) {
-                case 1:
+                case 1 ->
                     //adding expense
                     addExpense(expenses, s);
-                    break;
-                case 2:
+                case 2 ->
                     //update expense
                     updateExpense(expenses, s);
-                    break;
-                case 3:
+                case 3 ->
                     //delete expense
                     deleteExpense(expenses, s);
-                    break;
-                case 4:
+                case 4 ->
                     viewExpenses(expenses);
-                    break;
-                case 5:
+                case 5 ->
                     //view summary
                     viewSummary(expenses);
-                    break;
-                case 6:
+                case 6 ->
                     //view summary of specific month
                     viewSummaryByMonth(expenses, s);
-                    break;
-                case 7:
+                case 7 -> {
                     ExpenseUtils.saveExpenses(expenses);
                     System.out.println("Goodbye!");
                     return;
-                default:
+                }
+                default ->
                     System.out.println("Invalid choice. Try again.");
             }
         }
@@ -74,9 +71,9 @@ public class Main {
 
     static void viewSummaryByMonth(List<Expense> expenses, Scanner scanner) {
         System.out.print("Enter year (YYYY): ");
-        int year = scanner.nextInt();
+        int year = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter month (1-12): ");
-        int month = scanner.nextInt();
+        int month = Integer.parseInt(scanner.nextLine());
 
         // Validate month input
         if (month < 1 || month > 12) {
@@ -91,17 +88,17 @@ public class Main {
 
         for (Expense expense : expenses) {
             try {
-                LocalDate expenseDate = LocalDate.parse(expense.getDate(), formatter);
+                LocalDate expenseDate = LocalDate.parse(expense.date(), formatter);
                 if (expenseDate.getYear() == year && expenseDate.getMonthValue() == month) {
                     // Print details of the expense
-                    System.out.println("ID: " + expense.getId() +
-                            ", Description: " + expense.getDescription() +
-                            ", Amount: " + expense.getAmount());
-                    total += expense.getAmount();
+                    System.out.println("ID: " + expense.id() +
+                            ", Description: " + expense.description() +
+                            ", Amount: " + expense.amount());
+                    total += expense.amount();
                     foundExpenses = true;
                 }
             } catch (DateTimeParseException e) {
-                System.out.println("Invalid date format in expense data: " + expense.getDate());
+                System.out.println("Invalid date format in expense data: " + expense.date());
             }
         }
 
@@ -114,7 +111,7 @@ public class Main {
 
 
     static void viewSummary(List<Expense> expenses) {
-        double total = expenses.stream().mapToDouble(Expense::getAmount).sum();
+        double total = expenses.stream().mapToDouble(Expense::amount).sum();
         System.out.println("Total Expenses: " + total);
     }
 
@@ -124,32 +121,38 @@ public class Main {
             return;
         }
         for (Expense expense : expenses) {
-            System.out.println(expense.getId() + ": " + expense.getDescription() + " - " + expense.getAmount());
+            System.out.println(expense.id() + ": " + expense.description() + " - " + expense.amount());
         }
     }
 
     static void deleteExpense(List<Expense> expenses, Scanner s) {
         System.out.print("Enter Expense ID to Delete: ");
-        int id = s.nextInt();
+        int id = Integer.parseInt(s.nextLine());
 
-        expenses.removeIf(expense -> expense.getId() == id);
+        expenses.removeIf(expense -> expense.id() == id);
         ExpenseUtils.saveExpenses(expenses);
         System.out.println("Expense deleted successfully!");
     }
 
     static void updateExpense(List<Expense> expenses, Scanner scanner) {
         System.out.print("Enter Expense ID to Update: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int id = Integer.parseInt(scanner.nextLine());
 
-        for (Expense expense : expenses) {
-            if (expense.getId() == id) {
+        for (int i = 0; i < expenses.size(); i++) {
+            Expense expense = expenses.get(i);
+            if (expense.id() == id) {
                 System.out.print("Enter New Date (YYYY-MM-DD): ");
-                expense.setDate(scanner.nextLine());
+                var date = scanner.nextLine();
                 System.out.print("Enter New Description: ");
-                expense.setDescription(scanner.nextLine());
+                var description = scanner.nextLine();
                 System.out.print("Enter New Amount: ");
-                expense.setAmount(scanner.nextDouble());
+                var amount = Double.parseDouble(scanner.nextLine());
+                expenses.set(i, new Expense(
+                        expense.id(),
+                        date,
+                        description,
+                        amount
+                ));
                 ExpenseUtils.saveExpenses(expenses);
                 System.out.println("Expense updated successfully!");
                 return;
@@ -161,14 +164,13 @@ public class Main {
     static void addExpense(List<Expense> expenses, Scanner scanner) {
 
         System.out.print("Enter ID: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int id = Integer.parseInt(scanner.nextLine());
         System.out.print("Enter Date (YYYY-MM-DD): ");
         String date = scanner.nextLine();
         System.out.print("Enter Description: ");
         String description = scanner.nextLine();
         System.out.print("Enter Amount: ");
-        double amount = scanner.nextDouble();
+        double amount = Double.parseDouble(scanner.nextLine());
         expenses.add(new Expense(id, date, description, amount));
         ExpenseUtils.saveExpenses(expenses);
         System.out.println("Expense added successfully!");
