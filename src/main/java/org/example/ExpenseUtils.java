@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class expenseUtils {
+public class ExpenseUtils {
     private static final String FILE_PATH = "expense.json";
 
-    public static void saveExpenses(List<expense> expenses){
+    public static void saveExpenses(List<Expense> expenses){
 
         JSONArray jsonArray = new JSONArray();
 
-        for(expense ex : expenses){
+        for(Expense ex : expenses){
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("id", ex.getId());
             jsonObject.put("date",ex.getDate());
@@ -32,8 +32,8 @@ public class expenseUtils {
 
     }
 
-    public static List<expense> loadExpenses(){
-        List<expense> expenses = new ArrayList<>();
+    public static List<Expense> loadExpenses(){
+        List<Expense> expenses = new ArrayList<>();
         File file = new File(FILE_PATH);
 
         if(file.exists() == false){
@@ -51,7 +51,7 @@ public class expenseUtils {
             JSONArray jsonArray = new JSONArray(jsonText.toString());
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                expense expense = new expense(
+                Expense expense = new Expense(
                         jsonObject.getInt("id"),
                         jsonObject.getString("date"),
                         jsonObject.getString("description"),

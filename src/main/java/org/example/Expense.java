@@ -1,12 +1,12 @@
 package org.example;
 
-public class expense {
+public class Expense {
     private int id;
     private String date;
     private String description;
     private double amount;
 
-    public expense(int id, String date, String description, double amount){
+    public Expense(int id, String date, String description, double amount){
         this.id = id;
         this.date = date;
         this.description = description;

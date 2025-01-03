@@ -16,15 +16,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
 
     @Mock
-    private expenseUtils mockExpenseUtils;
-    private List<expense> testExpenses;
+    private ExpenseUtils mockExpenseUtils;
+    private List<Expense> testExpenses;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         testExpenses = new ArrayList<>();
-        testExpenses.add(new expense(1, "2025-01-01", "Groceries", 100.0));
-        testExpenses.add(new expense(2, "2025-02-01", "Utilities", 200.0));
+        testExpenses.add(new Expense(1, "2025-01-01", "Groceries", 100.0));
+        testExpenses.add(new Expense(2, "2025-02-01", "Utilities", 200.0));
     }
 
     @Test
