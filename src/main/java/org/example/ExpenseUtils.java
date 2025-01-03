@@ -20,10 +20,10 @@ public final class ExpenseUtils {
 
         for(Expense ex : expenses){
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", ex.getId());
-            jsonObject.put("date",ex.getDate());
-            jsonObject.put("description",ex.getDescription());
-            jsonObject.put("amount",ex.getAmount());
+            jsonObject.put("id", ex.id());
+            jsonObject.put("date",ex.date());
+            jsonObject.put("description",ex.description());
+            jsonObject.put("amount",ex.amount());
             jsonArray.put(jsonObject);
         }
 
